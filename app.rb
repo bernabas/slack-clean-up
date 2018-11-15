@@ -19,6 +19,16 @@ def list_all_users(client)
   h
 end
 
+def delete_images(client, files)
+  files.each do |file|
+    begin
+      client.files_delete file: file.id
+    rescue Slack::Web::Api::Errors::SlackError
+    end
+  end
+  true
+end
+
 def images_by_user(client, pages)
   h = {}
 
@@ -39,3 +49,6 @@ images = images_by_user(client, pages)
 users.each do |key, value|
   client.chat_postMessage(channel: '#general', text: "#{value.name} => uploaded #{images[key]&.size || 0}", as_user: false)
 end
+
+# delete
+# delete_images client, images["USER_ID"]
